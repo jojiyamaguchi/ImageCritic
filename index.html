@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画像アップロードAIコメントサイト</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #a0d6b4;
+        }
+        .chat-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .chat-message {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .chat-message img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+        .chat-message.user img {
+            margin-right: auto;
+        }
+        .chat-message.ai {
+            justify-content: flex-end;
+        }
+        .chat-message.ai .message {
+            background-color: #e0f7fa;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 70%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container chat-container">
+        <div id="chat-history"></div>
+        <form id="upload-form">
+            <div class="form-group">
+                <input type="file" class="form-control-file" id="image-upload" accept="image/*" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">アップロード</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const fileInput = document.getElementById('image-upload');
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const chatHistory = document.getElementById('chat-history');
+                    
+                    // User's image
+                    const userMessage = document.createElement('div');
+                    userMessage.classList.add('chat-message', 'user');
+                    const userImage = document.createElement('img');
+                    userImage.src = e.target.result;
+                    userMessage.appendChild(userImage);
+                    chatHistory.appendChild(userMessage);
+
+                    // AI's response
+                    const aiMessage = document.createElement('div');
+                    aiMessage.classList.add('chat-message', 'ai');
+                    const aiText = document.createElement('div');
+                    aiText.classList.add('message');
+                    aiText.textContent = 'いいですね、素敵です！';
+                    aiMessage.appendChild(aiText);
+                    chatHistory.appendChild(aiMessage);
+
+                    // Scroll to the bottom
+                    chatHistory.scrollTop = chatHistory.scrollHeight;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>
